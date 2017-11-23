@@ -1,0 +1,34 @@
+﻿@inherits UmbracoTemplatePage<Blog>
+@using DBC.Search.Mongo
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+    Layout = "Master.cshtml";
+    var blogposts = MongoSearchApi.GetBlogposts();
+}
+@Html.Partial("~/Views/Partials/SectionHeader.cshtml")
+
+<section class="section">
+    <div class="container">
+
+        @if (blogposts.Any())
+            {
+            <div class="blogposts">
+
+                @foreach (var blogpost in blogposts)
+                {
+                    
+                    <a href="@blogpost.Url" class="blogpost">
+                        <div class="blogpost-meta">
+                            <small class="blogpost-date">@blogpost.CreateDate.ToShortDateString()</small>
+                            <small class="blogpost-cat">
+                                @Html.Partial("~/Views/Partials/CategoryLinks.cshtml", blogpost.Categories)
+                            </small>
+                        </div>
+                        <h3 class="blogpost-title">@blogpost.Name</h3>
+                        <div class="blogpost-excerpt">@blogpost.Excerpt</div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</section>
