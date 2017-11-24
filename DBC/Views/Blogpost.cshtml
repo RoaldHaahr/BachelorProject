@@ -11,7 +11,7 @@
             <div class="blogpost-meta">
                 <small class="blogpost-date">@Model.Content.CreateDate.ToShortDateString()</small>
                 <span class="blogpost-cat">
-                    @Html.Partial("~/Views/Partials/CategoryLinks.cshtml", Model.Content.Categories)
+                    @Html.Partial("~/Views/Partials/CategoryLinks.cshtml", Model.Content.Categories.ToList())
                 </span>
             </div>
             <h3>@Model.Content.Excerpt</h3>

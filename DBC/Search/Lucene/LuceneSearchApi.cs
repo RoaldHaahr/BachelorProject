@@ -5,9 +5,9 @@ namespace DBC.Search.Lucene
 {
     public class LuceneSearchApi
     {
-        public static List<BlogpostDataModel> GetBlogposts()
+        public static List<BlogpostDataModel> GetBlogposts(string query = "")
         {
-            return Searcher.RawQuery<BlogpostDataModel>("*:*");
+            return Searcher.RawQuery<BlogpostDataModel>("Excerpt:*" + (string.IsNullOrEmpty(query) ? "" : query.ToLower() + "*"));
         }
     }
 }

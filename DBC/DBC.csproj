@@ -271,6 +271,10 @@
     <Content Include="config\imageprocessor\processing.config" />
     <Content Include="config\imageprocessor\cache.config" />
     <Content Include="App_Plugins\ModelsBuilder\package.manifest" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Media\Web.config" />
     <Content Include="config\umbracoSettings.config" />
     <Content Include="config\trees.config" />
@@ -289,7 +293,17 @@
     <Content Include="config\BaseRestExtensions.config" />
     <Content Include="config\applications.config" />
     <Content Include="config\404handlers.config" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="packages.config" />
+    <Content Include="scripts\bootstrap.js" />
+    <Content Include="scripts\bootstrap.min.js" />
+    <None Include="scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="scripts\jquery-1.10.2.js" />
+    <Content Include="scripts\jquery-1.10.2.min.js" />
+    <Content Include="scripts\modernizr-2.6.2.js" />
+    <Content Include="scripts\umbraco-starterkit-app.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
     <Content Include="Views\Partials\Grid\Editors\Rte.cshtml" />
@@ -314,6 +328,18 @@
     <Content Include="Views\Products.cshtml" />
     <Content Include="Views\BlogSQLPetaPoco.cshtml" />
     <Content Include="Views\BlogLucene.cshtml" />
+    <Content Include="Views\MacroPartials\FeaturedProducts.cshtml" />
+    <Content Include="Views\MacroPartials\LatestBlogposts.cshtml" />
+    <Content Include="Views\Partials\CategoryLinks.cshtml" />
+    <Content Include="Views\Partials\Navigation\SubNavigation.cshtml" />
+    <Content Include="Views\Partials\Navigation\TopNavigation.cshtml" />
+    <Content Include="Views\Partials\SectionHeader.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Test\Lucene.cshtml" />
+    <Content Include="Views\LuceneTest.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -354,10 +380,14 @@
     <Compile Include="App_Start\MongoContext.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\ApiControllers\IndexApiController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="EventHandlers\SearchEventHandler.cs" />
+    <Compile Include="Interfaces\IBlogpost.cs" />
+    <Compile Include="Interfaces\ISearchApi.cs" />
     <Compile Include="Models\BlogpostDataModel.cs" />
     <Compile Include="Models\MongoDataModels\BlogpostMongoDataModel.cs" />
     <Compile Include="Models\PetaPocoDataModels\BlogpostPetaPocoDataModel.cs" />
+    <Compile Include="Models\TestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\Lucene\LuceneIndexer.cs" />
     <Compile Include="Search\Lucene\LuceneSearchApi.cs" />
@@ -366,6 +396,7 @@
     <Compile Include="Search\Mongo\MongoSearchApi.cs" />
     <Compile Include="Search\PetaPoco\PetaPocoIndexer.cs" />
     <Compile Include="Search\PetaPoco\PetaPocoSearchApi.cs" />
+    <Compile Include="ViewModels\TestViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
@@ -389,7 +420,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56875</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56875/</IISUrl>
+          <IISUrl>http://localhost:56875</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -1,0 +1,36 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using DBC.Controllers
+@using DBC.Models
+
+@{
+	Layout = "Master.cshtml";
+    var lucenSearchResults = new TestController().Lucene();
+    var mongoSearchResults = new TestController().Mongo();
+    var petaPocoSearchResults = new TestController().PetaPoco();
+}
+
+@Html.Partial("~/Views/Partials/SectionHeader.cshtml")
+
+<style>
+    table {
+        width: 600px;
+    }
+
+    th {
+        text-align: left
+    }
+</style>
+
+<section class="section">
+    <div class="container">
+        @Html.Raw(lucenSearchResults)
+        <br />
+        @Html.Raw(mongoSearchResults)
+        <br />
+        @Html.Raw(petaPocoSearchResults)
+    </div>
+</section>
+
+
+
+

@@ -25,5 +25,15 @@ namespace DBC.Controllers.ApiControllers
         {
             return PetaPocoIndexer.Rebuild(status);
         }
+
+        [HttpGet]
+        public object RebuildAll(bool status = false)
+        {
+            PetaPocoIndexer.Rebuild(status);
+            MongoIndexer.Rebuild(status);
+            PetaPocoIndexer.Rebuild(status);
+
+            return "OK";
+        } 
     }
 }

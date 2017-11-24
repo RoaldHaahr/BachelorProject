@@ -1,0 +1,32 @@
+﻿@using DBC.Models
+@model DBC.ViewModels.TestViewModel
+@{
+    ViewBag.Title = "Lucene";
+    var properties = typeof(TestModel).GetProperties();
+}
+
+<h2>Lucene</h2>
+
+<table>
+    <thead>
+    <tr>
+        @foreach (var property in properties)
+        {
+            <th>@property.Name</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TestResultList)
+        {
+            <tr>
+                @foreach (var property in properties)
+                {
+                    <td>
+                        @item.GetType().GetProperties().Single(x => x.Name == property.Name).GetValue(item, null)
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

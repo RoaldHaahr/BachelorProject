@@ -151,6 +151,7 @@ namespace DBC.Search.Lucene
             var data = JsonConvert.SerializeObject(dataObject, _jsonSerializerSettings);
             
             doc.Add(new Field("Id", id, Field.Store.NO, Field.Index.NOT_ANALYZED, Field.TermVector.NO));
+            doc.Add(new Field("Excerpt", excerpt, Field.Store.NO, Field.Index.NOT_ANALYZED, Field.TermVector.YES));
             doc.Add(new Field("Data", data, Field.Store.YES, Field.Index.NO, Field.TermVector.NO));
 
             return doc;

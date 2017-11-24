@@ -35,13 +35,13 @@ namespace DBC.Search.PetaPoco
 
             var query = new Sql().Select("*").
                 From<BlogpostPetaPocoDataModel>(dbSqlSyntaxProvider)
-                .Where($"{content.Id} = {id}");
+                .Where($"[Id] = {id}");
 
             var nodeExists = dbContext.Query<BlogpostPetaPocoDataModel>(query).Any();
 
             if (nodeExists)
             {
-                dbContext.Update(BlogpostPetaPocoDataModel.TABLENAME, "Id", false, model);
+                dbContext.Update(BlogpostPetaPocoDataModel.TABLENAME, "Id", model, model.Id);
             }
             else
             {
@@ -55,7 +55,6 @@ namespace DBC.Search.PetaPoco
         {
             // connect to the db
             var dbContext = ApplicationContext.Current.DatabaseContext.Database;
-            var dbSqlSyntaxProvider = ApplicationContext.Current.DatabaseContext.SqlSyntax;
 
             // delete all
             var deleteQuery = $"DELETE FROM {BlogpostPetaPocoDataModel.TABLENAME}";
