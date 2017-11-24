@@ -2,8 +2,6 @@
 using DBC.Models.PetaPocoDataModels;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
-using Umbraco.Core.Persistence.Querying;
-using Umbraco.Core.Persistence.SqlSyntax;
 using Umbraco.Web;
 using Umbraco.Web.PublishedContentModels;
 
