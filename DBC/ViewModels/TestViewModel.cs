@@ -12,6 +12,7 @@ namespace DBC.ViewModels
         public double MinTime { get; set; }
         public double MaxTime { get; set; }
         public double AverageTime { get; set; }
+        public double AverageTimeMinFirst { get; set; }
 
         public TestViewModel()
         {

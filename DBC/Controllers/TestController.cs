@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Web;
-using System.Web.Mvc;
 using DBC.Models;
 using DBC.Search.Lucene;
 using DBC.Search.Mongo;
@@ -17,30 +14,44 @@ namespace DBC.Controllers
     public class TestController
     {
         private readonly PropertyInfo[] _properties;
+        private readonly PropertyInfo[] _viewModelProperties;
+        private readonly List<string> _vmProperties;
         private readonly List<string> _searchQueries;
 
         public TestController()
         {
             _properties = typeof(TestModel).GetProperties();
+            _viewModelProperties = typeof(TestViewModel).GetProperties();
+
+            _vmProperties = new List<string>();
+            foreach (var property in _viewModelProperties)
+            {
+                if (property.PropertyType == typeof(string) || property.PropertyType == typeof(int) || property.PropertyType == typeof(double) || property.PropertyType == typeof(long))
+                {
+                    _vmProperties.Add(property.Name);
+                }
+            }
+
             _searchQueries = new List<string>
             {
-                "Test",
-                "Skill",
+                "",
+                "",
+                "test",
+                "skill",
                 "built",
                 "built none",
                 "project walls",
                 "year and route",
                 "one us that",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
+                "and",
+                "to",
+                "or",
+                "the",
+                "Consumerism",
+                "Thanksgiving",
+                "shopping",
+                "million",
+                "people"
             };
         }
 
@@ -63,6 +74,9 @@ namespace DBC.Controllers
             }
 
             testViewModel.AverageTime = testViewModel.TestResultList.Average(x => x.SearchTime);
+            var results = testViewModel.TestResultList.Select(x => x.SearchTime).ToList();
+            results.RemoveAt(0);
+            testViewModel.AverageTimeMinFirst = results.Average();
             testViewModel.MinTime = testViewModel.TestResultList.Min(x => x.SearchTime);
             testViewModel.MaxTime = testViewModel.TestResultList.Max(x => x.SearchTime);
 
@@ -88,6 +102,9 @@ namespace DBC.Controllers
             }
 
             testViewModel.AverageTime = testViewModel.TestResultList.Average(x => x.SearchTime);
+            var results = testViewModel.TestResultList.Select(x => x.SearchTime).ToList();
+            results.RemoveAt(0);
+            testViewModel.AverageTimeMinFirst = results.Average();
             testViewModel.MinTime = testViewModel.TestResultList.Min(x => x.SearchTime);
             testViewModel.MaxTime = testViewModel.TestResultList.Max(x => x.SearchTime);
 
@@ -113,6 +130,9 @@ namespace DBC.Controllers
             }
 
             testViewModel.AverageTime = testViewModel.TestResultList.Average(x => x.SearchTime);
+            var results = testViewModel.TestResultList.Select(x => x.SearchTime).ToList();
+            results.RemoveAt(0);
+            testViewModel.AverageTimeMinFirst = results.Average();
             testViewModel.MinTime = testViewModel.TestResultList.Min(x => x.SearchTime);
             testViewModel.MaxTime = testViewModel.TestResultList.Max(x => x.SearchTime);
 
@@ -158,11 +178,22 @@ namespace DBC.Controllers
             sb.Append("<table>");
             sb.Append("<thead>");
             sb.Append("<tr>");
-            sb.Append("<th>Min</th><th>Max</th><th>Average</th>");
+            foreach (var item in _vmProperties)
+            {
+                sb.Append($"<th>{item}</th>");
+            }
             sb.Append("</tr>");
             sb.Append("</thead>");
             sb.Append("<tbody>");
-            sb.Append($"<td>{testViewModel.MinTime}</td><td>{testViewModel.MaxTime}</td><td>{testViewModel.AverageTime}</td>");
+
+            foreach (var property in _viewModelProperties)
+            {
+                if (_vmProperties.Contains(property.Name))
+                {
+                    sb.Append($"<td>{testViewModel.GetType().GetProperties().Single(x => x.Name == property.Name).GetValue(testViewModel, null)}</td>");
+                }
+            }
+
             sb.Append("</tbody>");
             sb.Append("</table>");
 

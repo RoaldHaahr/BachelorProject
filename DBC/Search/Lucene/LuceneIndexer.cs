@@ -41,7 +41,6 @@ namespace DBC.Search.Lucene
                 return "OK";
             }
 
-            // NOTE: Does this have to be changed to have multiple locks?
             lock (_lockIndex)
             {
                 _busyIndexing = true;
@@ -151,7 +150,7 @@ namespace DBC.Search.Lucene
             var data = JsonConvert.SerializeObject(dataObject, _jsonSerializerSettings);
             
             doc.Add(new Field("Id", id, Field.Store.NO, Field.Index.NOT_ANALYZED, Field.TermVector.NO));
-            doc.Add(new Field("Excerpt", excerpt, Field.Store.NO, Field.Index.NOT_ANALYZED, Field.TermVector.YES));
+            doc.Add(new Field("Excerpt", excerpt.ToLower(), Field.Store.NO, Field.Index.NOT_ANALYZED, Field.TermVector.YES));
             doc.Add(new Field("Data", data, Field.Store.YES, Field.Index.NO, Field.TermVector.NO));
 
             return doc;

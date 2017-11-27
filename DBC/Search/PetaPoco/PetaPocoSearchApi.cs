@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using DBC.Models.PetaPocoDataModels;
 using Umbraco.Core;
 
@@ -12,12 +13,33 @@ namespace DBC.Search.PetaPoco
             // connect to the db
             var dbContext = ApplicationContext.Current.DatabaseContext.Database;
 
-            var queryIsEmpty = string.IsNullOrEmpty(query);
+            var baseSql = $"SELECT * FROM {BlogpostPetaPocoDataModel.TABLENAME}";
 
-            var searchQuery = queryIsEmpty ? string.Empty : $" WHERE [Excerpt] REGEXP '[[:<:]]{string.Join("[[:>:]]' AND [Excerpt] REGEXP '[[:<:]]", query.Split(' '))}[[:>:]]'";
-            var sql = $"SELECT * FROM {BlogpostPetaPocoDataModel.TABLENAME}{searchQuery}";
+            if (string.IsNullOrEmpty(query))
+            {
+                return dbContext.Query<BlogpostPetaPocoDataModel>(baseSql).ToList();
+            }
 
-            var results = dbContext.Query<BlogpostPetaPocoDataModel>(sql).ToList();
+            var terms = query.Split(' ');
+
+            var sb = new StringBuilder();
+
+            sb.Append(baseSql);
+            sb.Append(" WHERE ");
+            foreach (var term in terms)
+            {
+                if (term != terms[0])
+                {
+                    sb.Append(" AND ");
+                }
+                sb.Append($"lower([Excerpt]) LIKE '%{term}%'");
+                //sb.Append($"(lower([Excerpt]) LIKE '% {term} %' OR lower([Excerpt]) LIKE '{term} %' OR lower([Excerpt]) LIKE '% {term}.%') OR lower([Excerpt]) LIKE '% {term},%'");
+            }
+
+            var searchQuery = sb.ToString();
+            //var sql = $"{baseSql}{searchQuery}";
+
+            var results = dbContext.Query<BlogpostPetaPocoDataModel>(searchQuery).ToList();
 
             return results;
         }
