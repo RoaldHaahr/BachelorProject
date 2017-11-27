@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DBC.Interfaces;
-using DBC.Models;
 using DBC.Models.PetaPocoDataModels;
 using Umbraco.Core;
 
@@ -14,9 +12,12 @@ namespace DBC.Search.PetaPoco
             // connect to the db
             var dbContext = ApplicationContext.Current.DatabaseContext.Database;
 
-            var searchQuery = $"SELECT * FROM {BlogpostPetaPocoDataModel.TABLENAME}{(!string.IsNullOrEmpty(query) ? " WHERE [Excerpt] LIKE '%" + query + "%'" : string.Empty)}";
+            var queryIsEmpty = string.IsNullOrEmpty(query);
 
-            var results = dbContext.Query<BlogpostPetaPocoDataModel>(searchQuery).ToList();
+            var searchQuery = queryIsEmpty ? string.Empty : $" WHERE [Excerpt] REGEXP '[[:<:]]{string.Join("[[:>:]]' AND [Excerpt] REGEXP '[[:<:]]", query.Split(' '))}[[:>:]]'";
+            var sql = $"SELECT * FROM {BlogpostPetaPocoDataModel.TABLENAME}{searchQuery}";
+
+            var results = dbContext.Query<BlogpostPetaPocoDataModel>(sql).ToList();
 
             return results;
         }

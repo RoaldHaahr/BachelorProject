@@ -7,7 +7,9 @@ namespace DBC.Search.Lucene
     {
         public static List<BlogpostDataModel> GetBlogposts(string query = "")
         {
-            return Searcher.RawQuery<BlogpostDataModel>("Excerpt:*" + (string.IsNullOrEmpty(query) ? "" : query.ToLower() + "*"));
+            var terms = query.Split(' ');
+            var searchQuery = "+Excerpt:*" + string.Join("* +Excerpt:*", terms) + "*";
+            return Searcher.RawQuery<BlogpostDataModel>(searchQuery);
         }
     }
 }
