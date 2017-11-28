@@ -9,7 +9,7 @@ namespace DBC.Search.Lucene
         {
             var terms = query.Split(' ');
             var searchQuery = "+Excerpt:*" + string.Join("* +Excerpt:*", terms) + "*";
-            return Searcher.RawQuery<BlogpostDataModel>(searchQuery);
+            return LuceneSearcher.RawQuery<BlogpostDataModel>(searchQuery);
         }
     }
 }

@@ -389,13 +389,15 @@
     <Compile Include="Models\PetaPocoDataModels\BlogpostPetaPocoDataModel.cs" />
     <Compile Include="Models\TestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\Examine\ExamineSearchApi.cs" />
     <Compile Include="Search\Lucene\LuceneIndexer.cs" />
     <Compile Include="Search\Lucene\LuceneSearchApi.cs" />
-    <Compile Include="Search\Lucene\Searcher.cs" />
+    <Compile Include="Search\Lucene\LuceneSearcher.cs" />
     <Compile Include="Search\Mongo\MongoIndexer.cs" />
     <Compile Include="Search\Mongo\MongoSearchApi.cs" />
     <Compile Include="Search\PetaPoco\PetaPocoIndexer.cs" />
     <Compile Include="Search\PetaPoco\PetaPocoSearchApi.cs" />
+    <Compile Include="Search\Umbraco\UmbracoSearchApi.cs" />
     <Compile Include="ViewModels\TestViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

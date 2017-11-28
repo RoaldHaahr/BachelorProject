@@ -4,6 +4,7 @@
 
 @{
 	Layout = "Master.cshtml";
+    var umbracoSearchResults = new TestController().Umbraco(Model.Content);
     var lucenSearchResults = new TestController().Lucene();
     var mongoSearchResults = new TestController().Mongo();
     var petaPocoSearchResults = new TestController().PetaPoco();
@@ -23,6 +24,8 @@
 
 <section class="section">
     <div class="container">
+        @Html.Raw(umbracoSearchResults)
+        <br />
         @Html.Raw(lucenSearchResults)
         <br />
         @Html.Raw(mongoSearchResults)

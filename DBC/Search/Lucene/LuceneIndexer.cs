@@ -121,7 +121,7 @@ namespace DBC.Search.Lucene
                 writer.Close();
             }
 
-            Searcher.Reset();
+            LuceneSearcher.Reset();
 
             _status = null;
         }
@@ -199,7 +199,7 @@ namespace DBC.Search.Lucene
                 }
             }
 
-            Searcher.Reset();
+            LuceneSearcher.Reset();
 
             return false;
         }
@@ -233,7 +233,7 @@ namespace DBC.Search.Lucene
                 }
             }
 
-            Searcher.Reset();
+            LuceneSearcher.Reset();
         }
     }
 }

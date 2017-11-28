@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DBC.App_Start;
 using DBC.Models.MongoDataModels;
 using MongoDB.Driver;
@@ -10,6 +9,16 @@ namespace DBC.Search.Mongo
 {
     public class MongoIndexer
     {
+        public static IMongoCollection<BlogpostMongoDataModel> GetCollection()
+        {
+            var dbContext = new MongoContext();
+
+            var collection = dbContext.Database
+                .GetCollection<BlogpostMongoDataModel>(Constants.MONGO_BLOGPOSTS_NAME);
+
+            return collection;
+        }
+
         public static bool Index(int id)
         {
             var umbracoHelper = new UmbracoHelper(UmbracoContext.Current);
@@ -23,9 +32,7 @@ namespace DBC.Search.Mongo
 
         private static void Save(Blogpost blogpost)
         {
-            var dbContext = new MongoContext();
-
-            var collection = dbContext.Database.GetCollection<BlogpostMongoDataModel>("blogposts");
+            var collection = GetCollection();
 
             var blogpostModel = new BlogpostMongoDataModel
             {
@@ -59,25 +66,21 @@ namespace DBC.Search.Mongo
             }
         }
 
+        public static void Delete(int id)
+        {
+            var collection = GetCollection();
+            var filter = Builders<BlogpostMongoDataModel>.Filter.Eq(x => x.Id, id);
+            collection.DeleteOne(filter);
+        }
 
         public static string Rebuild(bool status = false)
         {
-            // connect to the mongodb
-            var dbContext = new MongoContext();
-            
-            // get collection
-            var collection = dbContext.Database.GetCollection<BlogpostMongoDataModel>(Constants.MONGO_BLOGPOSTS_NAME);
-
-            // make filter to delete all documents
+            var collection = GetCollection();
             var delete = Builders<BlogpostMongoDataModel>.Filter.Empty;
 
-            // delete all documents
             collection.DeleteMany(delete);
 
-            // get an instance of an umbraco helper
             var umbracoHelper = new UmbracoHelper(UmbracoContext.Current);
-
-            // get all blogposts in the db and convert the to a mongo model
             var blogposts = umbracoHelper
                 .TypedContentAtRoot()
                 .Where(x => x.DocumentTypeAlias == Home.ModelTypeAlias)
@@ -85,7 +88,6 @@ namespace DBC.Search.Mongo
                 .Select(x => new BlogpostMongoDataModel { Id = x.Id, Categories = x.Categories.ToList(), Excerpt = x.Excerpt, CreateDate = x.CreateDate, Name = x.Name, Url = x.Url })
                 .ToList();
 
-            // insert each blogpost in the empty db
             foreach (var blogpost in blogposts)
             {
                 collection.InsertOneAsync(blogpost);

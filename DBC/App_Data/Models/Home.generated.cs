@@ -163,6 +163,15 @@ namespace Umbraco.Web.PublishedContentModels
 		}
 
 		///<summary>
+		/// Navigation
+		///</summary>
+		[ImplementPropertyType("navigation")]
+		public Umbraco.Web.Models.RelatedLinks Navigation
+		{
+			get { return this.GetPropertyValue<Umbraco.Web.Models.RelatedLinks>("navigation"); }
+		}
+
+		///<summary>
 		/// Logo: Optional. If you add a logo it'll be used in the upper left corner instead of the site name. Make sure to use a transparent logo for best results
 		///</summary>
 		[ImplementPropertyType("SiteLogo")]

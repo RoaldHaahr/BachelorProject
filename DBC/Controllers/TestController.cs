@@ -7,7 +7,13 @@ using DBC.Models;
 using DBC.Search.Lucene;
 using DBC.Search.Mongo;
 using DBC.Search.PetaPoco;
+using DBC.Search.Umbraco;
 using DBC.ViewModels;
+using MongoDB.Driver.Linq;
+using Umbraco.Core;
+using Umbraco.Core.Models;
+using Umbraco.Web;
+using Umbraco.Web.PublishedContentModels;
 
 namespace DBC.Controllers
 {
@@ -53,6 +59,35 @@ namespace DBC.Controllers
                 "million",
                 "people"
             };
+        }
+
+        public string Umbraco(IPublishedContent model)
+        {
+            TestViewModel testViewModel = new TestViewModel();
+            var umbracoHelper = new UmbracoHelper(UmbracoContext.Current);
+
+            foreach (var searchQuery in _searchQueries)
+            {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                var blogposts = UmbracoSearchApi.GetBlogposts(model, searchQuery); // pass searchQuery variable
+                stopwatch.Stop();
+
+                testViewModel.TestResultList.Add(new TestModel
+                {
+                    SearchQuery = searchQuery,
+                    SearchResults = blogposts.Count,
+                    SearchTime = stopwatch.Elapsed.TotalSeconds
+                });
+            }
+
+            testViewModel.AverageTime = testViewModel.TestResultList.Average(x => x.SearchTime);
+            var results = testViewModel.TestResultList.Select(x => x.SearchTime).ToList();
+            results.RemoveAt(0);
+            testViewModel.AverageTimeMinFirst = results.Average();
+            testViewModel.MinTime = testViewModel.TestResultList.Min(x => x.SearchTime);
+            testViewModel.MaxTime = testViewModel.TestResultList.Max(x => x.SearchTime);
+
+            return CreateTable(testViewModel, "Umbraco");
         }
 
         public string Lucene()

@@ -33,11 +33,9 @@ namespace DBC.Search.PetaPoco
                     sb.Append(" AND ");
                 }
                 sb.Append($"lower([Excerpt]) LIKE '%{term}%'");
-                //sb.Append($"(lower([Excerpt]) LIKE '% {term} %' OR lower([Excerpt]) LIKE '{term} %' OR lower([Excerpt]) LIKE '% {term}.%') OR lower([Excerpt]) LIKE '% {term},%'");
             }
 
             var searchQuery = sb.ToString();
-            //var sql = $"{baseSql}{searchQuery}";
 
             var results = dbContext.Query<BlogpostPetaPocoDataModel>(searchQuery).ToList();
 
