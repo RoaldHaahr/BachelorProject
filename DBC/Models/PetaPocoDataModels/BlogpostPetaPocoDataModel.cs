@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using DBC.Interfaces;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 

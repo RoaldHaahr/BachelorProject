@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using DBC.Models.PetaPocoDataModels;
-using DBC.Search;
 using DBC.Search.Lucene;
 using DBC.Search.Mongo;
 using DBC.Search.PetaPoco;
@@ -29,9 +28,27 @@ namespace DBC.EventHandlers
             }
 
             ContentService.Published += UpdateIndeces;
+            ContentService.Deleted += DeleteNode;
+            ContentService.UnPublished += UnpublishNode;
         }
 
-        public void UpdateIndeces(IPublishingStrategy sender, PublishEventArgs<IContent> args)
+        private void UnpublishNode(IPublishingStrategy sender, PublishEventArgs<IContent> e)
+        {
+            foreach (var node in e.PublishedEntities.Where(x => x.ContentType.Alias == Blogpost.ModelTypeAlias))
+            {
+                RemoveFromIndeces(node.Id);
+            }
+        }
+
+        private void DeleteNode(IContentService sender, DeleteEventArgs<IContent> e)
+        {
+            foreach (var node in e.DeletedEntities.Where(x => x.ContentType.Alias == Blogpost.ModelTypeAlias))
+            {
+                RemoveFromIndeces(node.Id);
+            }
+        }
+
+        private void UpdateIndeces(IPublishingStrategy sender, PublishEventArgs<IContent> args)
         {
             foreach (var node in args.PublishedEntities.Where(x => x.ContentType.Alias == Blogpost.ModelTypeAlias))
             {
@@ -39,6 +56,13 @@ namespace DBC.EventHandlers
                 LuceneIndexer.Index(node.Id);
                 PetaPocoIndexer.Index(node.Id);
             }
+        }
+
+        private void RemoveFromIndeces(int id)
+        {
+            MongoIndexer.Delete(id);
+            LuceneIndexer.RemoveFromIndex(id);
+            PetaPocoIndexer.Delete(id);
         }
     }
 }

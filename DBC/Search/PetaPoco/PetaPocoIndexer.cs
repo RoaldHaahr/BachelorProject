@@ -9,7 +9,6 @@ namespace DBC.Search.PetaPoco
 {
     public class PetaPocoIndexer
     {
-
         public static bool Index(int id)
         {
             var dbContext = ApplicationContext.Current.DatabaseContext.Database;
@@ -33,8 +32,8 @@ namespace DBC.Search.PetaPoco
                 Id = content.Id
             };
 
-            var query = new Sql().Select("*").
-                From<BlogpostPetaPocoDataModel>(dbSqlSyntaxProvider)
+            var query = new Sql().Select("*")
+                .From<BlogpostPetaPocoDataModel>(dbSqlSyntaxProvider)
                 .Where($"[Id] = {id}");
 
             var nodeExists = dbContext.Query<BlogpostPetaPocoDataModel>(query).Any();
@@ -51,27 +50,39 @@ namespace DBC.Search.PetaPoco
             return true;
         }
 
-        public static string Rebuild(bool status = false)
+        public static void Delete (int id)
         {
             // connect to the db
             var dbContext = ApplicationContext.Current.DatabaseContext.Database;
 
-            // delete all
+            // delete node
+            var deleteQuery = $"DELETE FROM {BlogpostPetaPocoDataModel.TABLENAME} WHERE [Id] = {id}";
+            dbContext.Execute(deleteQuery);
+        }
+
+        public static string Rebuild(bool status = false)
+        {
+            var dbContext = ApplicationContext.Current.DatabaseContext.Database;
             var deleteQuery = $"DELETE FROM {BlogpostPetaPocoDataModel.TABLENAME}";
+
             dbContext.Execute(deleteQuery);
 
             var umbracoHelper = new UmbracoHelper(UmbracoContext.Current);
-            
-            // get all blogposts in the db and convert the to a mongo model
             var blogposts = umbracoHelper
                 .TypedContentAtRoot()
                 .Where(x => x.DocumentTypeAlias == Home.ModelTypeAlias)
                 .SelectMany(y => y.Descendants<Blogpost>())
-                .Select(x => new BlogpostPetaPocoDataModel { Id = x.Id, Categories = string.Join(",", x.Categories), Excerpt = x.Excerpt, CreateDate = x.CreateDate, Name = x.Name, Url = x.Url })
+                .Select(x => new BlogpostPetaPocoDataModel
+                {
+                    Id = x.Id,
+                    Categories = string.Join(",", x.Categories),
+                    Excerpt = x.Excerpt,
+                    CreateDate = x.CreateDate,
+                    Name = x.Name,
+                    Url = x.Url
+                })
                 .ToList();
 
-
-            // insert each blogpost in the empty db
             foreach (var blogpost in blogposts)
             {
                 dbContext.Insert(BlogpostPetaPocoDataModel.TABLENAME, "Id", false, blogpost);

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DBC.App_Start;
+using DBC.Models;
 using DBC.Models.MongoDataModels;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -9,25 +9,35 @@ namespace DBC.Search.Mongo
 {
     public class MongoSearchApi
     {
-        public static List<BlogpostMongoDataModel> GetBlogposts(string query = "")
+        public static List<BlogpostDataModel> GetBlogposts(string query = "")
         {
             var dbContext = new MongoContext();
-            var collection = dbContext.Database.GetCollection<BlogpostMongoDataModel>(Constants.MONGO_BLOGPOSTS_NAME);
+            var collection = dbContext.Database
+                .GetCollection<BlogpostMongoDataModel>(Constants.MONGO_BLOGPOSTS_NAME);
             var builder = Builders<BlogpostMongoDataModel>.Filter;
             var filter = builder.Empty;
-            var terms = query.Split(' ');
 
-            if (!terms.Any())
+            if (!string.IsNullOrEmpty(query))
             {
-                return collection.Find(filter).ToList();
+                var terms = query.Split(' ');
+                var filters = terms
+                    .Select(term => builder.Regex("excerpt", new BsonRegularExpression(term, "i")))
+                    .ToList();
+                filter = builder.And(filters);
             }
 
-            var filters = terms.Select(term => builder.Regex("excerpt", new BsonRegularExpression(term, "i"))).ToList();
-
-            filter = builder.And(filters);
-
-            var blogpostMongoDataModels = collection.Find(filter).ToList();
-            return blogpostMongoDataModels;
+            return collection.Find(filter)
+                .ToEnumerable()
+                .Select(x => new BlogpostDataModel
+                {
+                    Categories = x.Categories,
+                    CreateDate = x.CreateDate,
+                    Excerpt = x.Excerpt,
+                    Url = x.Url,
+                    Id = x.Id.ToString(),
+                    Name = x.Name
+                })
+                .ToList();
         }
     }
 }

@@ -16,7 +16,7 @@
 
                 @foreach (var blogpost in blogposts)
                 {
-                    var categories = blogpost.Categories.Split(',').ToList();
+                    var categories = blogpost.Categories.ToList();
                     <a href="@blogpost.Url" class="blogpost">
                         <div class="blogpost-meta">
                             <small class="blogpost-date">@blogpost.CreateDate.ToShortDateString()</small>

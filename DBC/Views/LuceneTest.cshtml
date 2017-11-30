@@ -1,13 +1,14 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@inherits UmbracoTemplatePage
 @using DBC.Controllers
-@using DBC.Models
 
 @{
 	Layout = "Master.cshtml";
-    var umbracoSearchResults = new TestController().Umbraco(Model.Content);
+    var umbracoHelperSearchResults = new TestController().UmbracoContentService(Model.Content);
+    var umbracoCSSearchResults = new TestController().UmbracoHelper();
     var lucenSearchResults = new TestController().Lucene();
     var mongoSearchResults = new TestController().Mongo();
     var petaPocoSearchResults = new TestController().PetaPoco();
+    var examineSearchResults = new TestController().Examine();
 }
 
 @Html.Partial("~/Views/Partials/SectionHeader.cshtml")
@@ -24,13 +25,17 @@
 
 <section class="section">
     <div class="container">
-        @Html.Raw(umbracoSearchResults)
+        @Html.Raw(umbracoCSSearchResults)
+        <br />
+        @Html.Raw(umbracoHelperSearchResults)
         <br />
         @Html.Raw(lucenSearchResults)
         <br />
         @Html.Raw(mongoSearchResults)
         <br />
         @Html.Raw(petaPocoSearchResults)
+        <br />
+        @Html.Raw(examineSearchResults)
     </div>
 </section>
 

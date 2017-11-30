@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using DBC.App_Start;
 using DBC.Models.MongoDataModels;
 using MongoDB.Driver;
 using Umbraco.Web;
@@ -50,7 +49,6 @@ namespace DBC.Search.Mongo
 
             if (modelExists)
             {
-                // update
                 var update = Builders<BlogpostMongoDataModel>.Update
                     .Set("name", blogpostModel.Name)
                     .Set("createDate", blogpostModel.CreateDate)
@@ -61,7 +59,6 @@ namespace DBC.Search.Mongo
             }
             else
             {
-                // insert
                 collection.InsertOneAsync(blogpostModel);
             }
         }
@@ -85,7 +82,15 @@ namespace DBC.Search.Mongo
                 .TypedContentAtRoot()
                 .Where(x => x.DocumentTypeAlias == Home.ModelTypeAlias)
                 .SelectMany(y => y.Descendants<Blogpost>())
-                .Select(x => new BlogpostMongoDataModel { Id = x.Id, Categories = x.Categories.ToList(), Excerpt = x.Excerpt, CreateDate = x.CreateDate, Name = x.Name, Url = x.Url })
+                .Select(x => new BlogpostMongoDataModel
+                {
+                    Id = x.Id,
+                    Categories = x.Categories.ToList(),
+                    Excerpt = x.Excerpt,
+                    CreateDate = x.CreateDate,
+                    Name = x.Name,
+                    Url = x.Url
+                })
                 .ToList();
 
             foreach (var blogpost in blogposts)
