@@ -5,16 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using DBC.Models;
-using DBC.Models.MongoDataModels;
-using DBC.Models.PetaPocoDataModels;
-using DBC.Search.Examine;
 using DBC.Search.Lucene;
 using DBC.Search.Mongo;
 using DBC.Search.PetaPoco;
 using DBC.Search.Umbraco;
 using DBC.ViewModels;
 using Umbraco.Core.Models;
-using Umbraco.Web.PublishedContentModels;
 
 namespace DBC.Controllers
 {
@@ -65,7 +61,7 @@ namespace DBC.Controllers
 
         public string Examine()
         {
-            return BuildTest("Examine", ExamineSearchApi.GetBlogposts);
+            return BuildTest("Examine", UmbracoSearchApi.GetBlogpostsWithExamine);
         }
 
         public string UmbracoHelper()

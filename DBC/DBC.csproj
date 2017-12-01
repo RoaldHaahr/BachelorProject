@@ -389,7 +389,6 @@
     <Compile Include="Models\PetaPocoDataModels\BlogpostPetaPocoDataModel.cs" />
     <Compile Include="Models\TestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Search\Examine\ExamineSearchApi.cs" />
     <Compile Include="Search\Lucene\LuceneIndexer.cs" />
     <Compile Include="Search\Lucene\LuceneSearchApi.cs" />
     <Compile Include="Search\Lucene\LuceneSearcher.cs" />

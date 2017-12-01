@@ -31,7 +31,7 @@ namespace DBC.Controllers.ApiControllers
         {
             PetaPocoIndexer.Rebuild(status);
             MongoIndexer.Rebuild(status);
-            PetaPocoIndexer.Rebuild(status);
+            LuceneIndexer.Rebuild(status);
 
             return "OK";
         } 
